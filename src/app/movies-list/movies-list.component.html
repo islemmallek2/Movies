@@ -1,0 +1,121 @@
+<div class="toolbar" role="banner">
+      <div class="spacer"></div>
+  </div>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<div class="p-grid ui-fluid">
+ 
+<br>
+    <div class="p-col-12 p-md-12">
+ 
+    <h1 Style="margin : 0 0 10px 10px;font : 150% georgia, palatino, serif;">Liste des films</h1>
+
+    <div class="card">
+
+        <p-table [columns]="cols" Style="text-align: center;"  rowExpandMode="single"  [lazy]="true" (onLazyLoad)="LoadLazyMovies($event)" [totalRecords]="totalRecords"  [value]="movies"   dataKey="idM"  [globalFilterFields]="['title','releaseDate','type','Director']"
+        [responsive]="true"  [paginator]="true"  [rows]="5" [loading]="loading" #dt>
+
+        <ng-template pTemplate="caption">
+
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" pInputText size="auto" placeholder="Filtre global" (input)="dt.filterGlobal($event.target,'contains')" style="width:auto;text-align: center;">
+     
+         
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th class="text-center">  <b>Titre</b> 
+                      </th>
+                      <th class="text-center" >  <b>Date de sortie</b> 
+                      </th>
+                      <th class="text-center">  <b>Type</b> 
+                      </th>
+                      <th class="text-center">  <b>Réalisateur</b> 
+                      </th>
+                      <th class="text-center"><b>Action</b> 
+                      </th>
+                </tr>
+    
+            </ng-template>
+            <ng-template pTemplate="body" let-movie>
+                <tr>
+                    <td>
+                        <span class="image-text">{{movie.title}}</span>
+                    </td>
+                    <td>
+                        {{movie.releaseDate }}
+                    </td>
+                    <td>
+                        <span class="image-text">{{movie.type}}</span>
+                    </td>
+                    <td>
+                        {{movie.director}}
+                    </td>
+                    <td>
+                    <div class=" ui-g-12">
+                        <div class="ui-g-6">
+                            <button pButton type="button"  icon="pi pi-pencil" pTooltip="Modifier" tooltipPosition="right" tooltipEvent="hover" (click)="onRowSelect(movie)"  style="color:cornflowerblue;background-color: white;margin-bottom:10px;" class="ui-button-raised"></button>
+                        </div>
+                        <div class="ui-g-6">
+                            <button pButton type="button"  icon="pi pi-trash" pTooltip="Supprimer" tooltipPosition="right" tooltipEvent="hover" (click)="delete(movie)"  style="color:red;background-color: white;margin-bottom:10px;" class="ui-button-raised"></button>
+                        </div>
+                    </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Aucun film trouvé.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div style="text-align:right" >
+            <button type="button" pButton icon="pi pi-plus"  pTooltip="Ajouter" tooltipPosition="right" tooltipEvent="hover"  style="color:cornflowerblue;background-color: white;margin-bottom:10px;" class="ui-button-raised" (click)="showDialogToAddMovies()">
+            </button>
+        </div>
+
+
+
+        <p-dialog header="Ajouter/Modifier film" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [draggable]="true" [style]="{width: '50vw' , height: '30vw'}" [maximizable]="true" position="center" >
+        <div class="p-grid"  *ngIf="displayDialog">
+        <form [formGroup]="formAjout" (ngSubmit)="save()">
+            <div class="ui-g ui-fluid" >
+                <div class="ui-g-12">
+               <label for="titreDiplome" style="color:black;font-weight:bold;">Titre</label> &nbsp; &nbsp;
+               <input pInputText id="titre" name="title" formControlName="Title" [(ngModel)]="movie.title" />
+                </div> 
+                <br>  
+         <div class="ui-g-12">
+                <label for="titreDiplome" style="color:black;font-weight:bold;">Type</label> &nbsp; &nbsp;
+                <input pInputText id="type" name="type" formControlName="Type" [(ngModel)]="movie.type" />
+         </div>
+         <br>
+       <div class="ui-g-12">
+             <label for="universite" style="color:black;font-weight:bold;">Réalisateur</label> &nbsp; &nbsp;
+             <input pInputText id="Director" name="Director" formControlName="Director" [(ngModel)]="movie.director" />
+        </div>
+        <br>
+        <div class="ui-g-12">
+            <label for="universite" style="color:black;font-weight:bold;">Date de sortie</label> &nbsp; &nbsp;
+            <p-calendar [(ngModel)]="movie.releaseDate" [ngModelOptions]="{standalone: true}"  dateFormat="dd/mm/yy" [inline]="true"></p-calendar>
+    </div>
+    <br>
+         <p-footer>
+            <div class="ui-g-12">
+                <div class="ui-g-5"></div>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix ui-g-2">
+     
+                    <button type="submit" pButton  label="Annuler" icon="pi pi-replay" iconPos="right" (click)="this.displayDialog=false" ></button> &nbsp; &nbsp;
+                    <button type="submit" pButton [disabled]="!formAjout.valid" label="Enregistrer" icon="pi pi-save" iconPos="right" ></button>
+                </div>
+            </div>
+        </p-footer>
+        </div>
+    </form>
+    </div>
+        </p-dialog>
+    </div>
+</div>
+</div>
+
